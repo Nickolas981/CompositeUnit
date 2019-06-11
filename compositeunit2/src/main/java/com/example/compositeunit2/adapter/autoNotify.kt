@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 
 
-fun <T> androidx.recyclerview.widget.RecyclerView.Adapter<*>.autoNotify(
+fun <T> RecyclerView.Adapter<*>.autoNotify(
     oldList: List<T>,
     newList: List<T>,
     compare: (T, T) -> Boolean,

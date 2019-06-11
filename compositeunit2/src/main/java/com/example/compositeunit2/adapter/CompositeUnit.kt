@@ -19,4 +19,5 @@ interface CompositeUnit {
         get() = 1
 
     fun toAdapter(): MultiTypedDataBindingAdapter<Any> = CompositeBuilder.build(this)
+    fun toPagedAdapter(): MultiTypedPagedDataBindingAdapter<Any> = CompositeBuilder.buildPaged(this)
 }
