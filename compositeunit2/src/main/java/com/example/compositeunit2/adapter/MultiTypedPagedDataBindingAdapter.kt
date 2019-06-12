@@ -22,4 +22,5 @@ open class MultiTypedPagedDataBindingAdapter<T : Any>(
     }
 
     override fun getSpanSize(viewType: Int): Int = 1
+
 }
