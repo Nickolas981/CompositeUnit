@@ -1,4 +1,4 @@
-package com.example.compositeunit2
+package com.example.compositeunit2.utils
 
 import android.annotation.SuppressLint
 import androidx.recyclerview.widget.DiffUtil

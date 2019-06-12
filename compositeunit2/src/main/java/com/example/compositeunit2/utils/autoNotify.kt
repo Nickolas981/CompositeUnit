@@ -1,4 +1,4 @@
-package com.example.compositeunit2.adapter
+package com.example.compositeunit2.utils
 
 import android.os.Handler
 import android.os.Looper

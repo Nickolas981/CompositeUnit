@@ -5,8 +5,8 @@ import android.os.Bundle
 import android.os.Handler
 import androidx.paging.PageKeyedDataSource
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.compositeunit2.adapter.CompositeBuilder
-import com.example.compositeunit2.adapter.SimpleCompositeUnit
+import com.example.compositeunit2.base.CompositeBuilder
+import com.example.compositeunit2.base.SimpleCompositeUnit
 import kotlinx.android.synthetic.main.activity_main.*
 import androidx.paging.PagedList
 import android.os.Looper
@@ -24,8 +24,17 @@ class MainActivity : AppCompatActivity() {
 
     fun initRecyclerView() {
         recyclerView.layoutManager = LinearLayoutManager(this)
-        val adapter = CompositeBuilder().add(SimpleCompositeUnit(Number::class.java, R.layout.item_number))
-            .buildPaged(SimpleCompositeUnit(NumberRed::class.java, R.layout.item_number_red), NumberRed(""))
+        val adapter = CompositeBuilder().add(
+            SimpleCompositeUnit(
+                Number::class.java,
+                R.layout.item_number
+            )
+        )
+            .buildPaged(
+                SimpleCompositeUnit(
+                    NumberRed::class.java,
+                    R.layout.item_number_red
+                ), NumberRed(""))
         recyclerView.adapter = adapter
 
         val config = PagedList.Config.Builder()

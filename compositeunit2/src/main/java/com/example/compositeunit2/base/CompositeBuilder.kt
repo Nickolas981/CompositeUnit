@@ -1,10 +1,14 @@
-package com.example.compositeunit2.adapter
+package com.example.compositeunit2.base
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import com.example.compositeunit2.adapter.EXTRA_ROW_TYPE
+import com.example.compositeunit2.adapter.MultiTypedDataBindingAdapter
+import com.example.compositeunit2.adapter.MultiTypedPagedDataBindingAdapter
+import com.example.compositeunit2.adapter.PagedWithExtraRow
 
 class CompositeBuilder {
     private val units: MutableList<CompositeUnit> = mutableListOf()
@@ -174,7 +178,9 @@ class CompositeBuilder {
                     val binding: ViewDataBinding = DataBindingUtil.inflate(
                         LayoutInflater.from(parent.context), extraCU.layoutId, parent, false
                     )
-                    SimpleDataBindingViewHolder(binding)
+                    SimpleDataBindingViewHolder(
+                        binding
+                    )
                 } else  {
                     val simpleViewHolder = if (bindingMap[viewType] == true) {
                         super.onCreateViewHolder(parent, viewType)

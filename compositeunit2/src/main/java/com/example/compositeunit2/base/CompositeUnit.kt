@@ -1,6 +1,8 @@
-package com.example.compositeunit2.adapter
+package com.example.compositeunit2.base
 
 import android.view.View
+import com.example.compositeunit2.adapter.MultiTypedDataBindingAdapter
+import com.example.compositeunit2.adapter.MultiTypedPagedDataBindingAdapter
 
 interface CompositeUnit {
     val clazz: Class<*>
@@ -18,6 +20,8 @@ interface CompositeUnit {
     val spanSize: Int
         get() = 1
 
-    fun toAdapter(): MultiTypedDataBindingAdapter<Any> = CompositeBuilder.build(this)
-    fun toPagedAdapter(): MultiTypedPagedDataBindingAdapter<Any> = CompositeBuilder.buildPaged(this)
+    fun toAdapter(): MultiTypedDataBindingAdapter<Any> =
+        CompositeBuilder.build(this)
+    fun toPagedAdapter(): MultiTypedPagedDataBindingAdapter<Any> =
+        CompositeBuilder.buildPaged(this)
 }

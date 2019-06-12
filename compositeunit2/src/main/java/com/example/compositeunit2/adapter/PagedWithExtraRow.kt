@@ -1,5 +1,7 @@
 package com.example.compositeunit2.adapter
 
+import com.example.compositeunit2.base.CompositeUnit
+
 
 const val EXTRA_ROW_TYPE = -13
 

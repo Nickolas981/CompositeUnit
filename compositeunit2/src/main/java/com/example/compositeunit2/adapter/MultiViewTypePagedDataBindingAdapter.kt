@@ -7,11 +7,15 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.paging.PagedListAdapter
 import com.example.compositeunit2.BR
-import com.example.compositeunit2.SimpleDiffUtilCallback
+import com.example.compositeunit2.utils.SimpleDiffUtilCallback
 
 
 abstract class MultiViewTypePagedDataBindingAdapter<T : Any>(compare: (T, T) -> Boolean) :
-    PagedListAdapter<T, MultiViewTypePagedDataBindingAdapter.SimpleViewHolder>(SimpleDiffUtilCallback<T>(compare)) {
+    PagedListAdapter<T, MultiViewTypePagedDataBindingAdapter.SimpleViewHolder>(
+        SimpleDiffUtilCallback<T>(
+            compare
+        )
+    ) {
 
     abstract fun getViewType(item: T): Int
     abstract fun getLayoutIdForViewType(viewType: Int): Int

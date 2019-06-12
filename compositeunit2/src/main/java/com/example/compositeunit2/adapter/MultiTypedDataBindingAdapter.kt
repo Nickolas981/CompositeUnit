@@ -1,5 +1,7 @@
 package com.example.compositeunit2.adapter
 
+import com.example.compositeunit2.utils.autoNotify
+
 open class MultiTypedDataBindingAdapter<T : Any>(
         private val types: Map<Class<*>, Int>, // Map for viewTypes
         private val layoutIds: Map<Int, Int>, // Map for layoutIds
