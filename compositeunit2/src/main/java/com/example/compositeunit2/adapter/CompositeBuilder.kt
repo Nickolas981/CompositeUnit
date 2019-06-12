@@ -3,6 +3,8 @@ package com.example.compositeunit2.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 
 class CompositeBuilder {
     private val units: MutableList<CompositeUnit> = mutableListOf()
@@ -168,28 +170,39 @@ class CompositeBuilder {
         ) {
 
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SimpleViewHolder {
-                val simpleViewHolder = if (bindingMap[viewType] == true) {
-                    super.onCreateViewHolder(parent, viewType)
-                } else {
-                    SimpleViewHolder(
-                        LayoutInflater.from(parent.context).inflate(
-                            layoutMap[viewType]!!,
-                            parent,
-                            false
-                        )
+                return if (viewType == EXTRA_ROW_TYPE) {
+                    val binding: ViewDataBinding = DataBindingUtil.inflate(
+                        LayoutInflater.from(parent.context), extraCU.layoutId, parent, false
                     )
+                    SimpleDataBindingViewHolder(binding)
+                } else  {
+                    val simpleViewHolder = if (bindingMap[viewType] == true) {
+                        super.onCreateViewHolder(parent, viewType)
+                    } else {
+                        SimpleViewHolder(
+                            LayoutInflater.from(parent.context).inflate(
+                                layoutMap[viewType]!!,
+                                parent,
+                                false
+                            )
+                        )
+                    }
+                    createActionMap[viewType]?.let { it(simpleViewHolder.itemView) }
+                    simpleViewHolder
                 }
-                createActionMap[viewType]?.let { it(simpleViewHolder.itemView) }
-                return simpleViewHolder
             }
 
             override fun onBindViewHolder(holder: SimpleViewHolder, position: Int) {
-                val viewType = getItemViewType(position)
-                if (bindingMap[viewType] == true) {
-                    super.onBindViewHolder(holder, position)
-                }
-                actionMap[viewType]?.let {
-                    it(holder.itemView, getItem(position)!!)
+                if (position == itemCount - 1) {
+                    holder.bind(extraItem, extraCU.handler)
+                } else {
+                    val viewType = getItemViewType(position)
+                    if (bindingMap[viewType] == true) {
+                        super.onBindViewHolder(holder, position)
+                    }
+                    actionMap[viewType]?.let {
+                        it(holder.itemView, getItem(position)!!)
+                    }
                 }
             }
 
