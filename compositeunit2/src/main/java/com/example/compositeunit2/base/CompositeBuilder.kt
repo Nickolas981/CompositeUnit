@@ -34,7 +34,7 @@ class CompositeBuilder {
     }
 
 
-    fun build(): MultiTypedDataBindingAdapter<Any> {
+    fun build(recyclable: Boolean = true): MultiTypedDataBindingAdapter<Any> {
         val typesMap: MutableMap<Class<*>, Int> = mutableMapOf()
         val layoutMap: MutableMap<Int, Int> = mutableMapOf()
         val handlerMap: MutableMap<Int, Any> = mutableMapOf()
@@ -71,6 +71,7 @@ class CompositeBuilder {
                     )
                 }
                 createActionMap[viewType]?.let { it(simpleViewHolder.itemView) }
+                simpleViewHolder.setIsRecyclable(recyclable)
                 return simpleViewHolder
             }
 
@@ -181,7 +182,7 @@ class CompositeBuilder {
                     SimpleDataBindingViewHolder(
                         binding
                     )
-                } else  {
+                } else {
                     val simpleViewHolder = if (bindingMap[viewType] == true) {
                         super.onCreateViewHolder(parent, viewType)
                     } else {
