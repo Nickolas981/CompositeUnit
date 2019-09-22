@@ -1,14 +1,8 @@
 package com.example.compositeunit2.base
 
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
-import com.example.compositeunit2.adapter.EXTRA_ROW_TYPE
-import com.example.compositeunit2.adapter.MultiTypedDataBindingAdapter
-import com.example.compositeunit2.adapter.MultiTypedPagedDataBindingAdapter
-import com.example.compositeunit2.adapter.PagedWithExtraRow
+import com.example.compositeunit2.adapter.*
 
 class CompositeBuilder {
     private val units: MutableList<CompositeUnit> = mutableListOf()
@@ -36,43 +30,28 @@ class CompositeBuilder {
 
     fun build(recyclable: Boolean = true): MultiTypedDataBindingAdapter<Any> {
         val typesMap: MutableMap<Class<*>, Int> = mutableMapOf()
-        val layoutMap: MutableMap<Int, Int> = mutableMapOf()
         val handlerMap: MutableMap<Int, Any> = mutableMapOf()
         val bindingMap: MutableMap<Int, Boolean> = mutableMapOf()
         val actionMap: MutableMap<Int, (View, Any) -> Unit> = mutableMapOf()
-        val createActionMap: MutableMap<Int, (View) -> Unit> = mutableMapOf()
         val spanSizeMap: MutableMap<Int, Int> = mutableMapOf()
+        val getViewHolderMap: MutableMap<Int, (ViewGroup, Boolean) -> SimpleViewHolder> =
+            mutableMapOf()
 
         units.forEachIndexed { index, unit ->
             typesMap[unit.clazz] = index
-            layoutMap[index] = unit.layoutId
             unit.handler?.let { handlerMap[index] = it }
             bindingMap[index] = unit.binding
             unit.action?.let { actionMap[index] = it }
-            unit.createAction?.let { createActionMap[index] = it }
             spanSizeMap[index] = unit.spanSize
-            unit.createAction?.let { createActionMap[index] = it }
+            getViewHolderMap[index] = unit::getViewHolder
         }
 
         return object : MultiTypedDataBindingAdapter<Any>(
-            typesMap, layoutMap, handlerMap, buildCompare()
+            typesMap, handlerMap, buildCompare()
         ) {
 
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SimpleViewHolder {
-                val simpleViewHolder = if (bindingMap[viewType] == true) {
-                    super.onCreateViewHolder(parent, viewType)
-                } else {
-                    SimpleViewHolder(
-                        LayoutInflater.from(parent.context).inflate(
-                            layoutMap[viewType]!!,
-                            parent,
-                            false
-                        )
-                    )
-                }
-                createActionMap[viewType]?.let { it(simpleViewHolder.itemView) }
-                simpleViewHolder.setIsRecyclable(recyclable)
-                return simpleViewHolder
+                return getViewHolderMap[viewType]!!(parent, recyclable)
             }
 
             override fun onBindViewHolder(holder: SimpleViewHolder, position: Int) {
@@ -93,42 +72,27 @@ class CompositeBuilder {
 
     fun buildPaged(): MultiTypedPagedDataBindingAdapter<Any> {
         val typesMap: MutableMap<Class<*>, Int> = mutableMapOf()
-        val layoutMap: MutableMap<Int, Int> = mutableMapOf()
         val handlerMap: MutableMap<Int, Any> = mutableMapOf()
         val bindingMap: MutableMap<Int, Boolean> = mutableMapOf()
         val actionMap: MutableMap<Int, (View, Any) -> Unit> = mutableMapOf()
-        val createActionMap: MutableMap<Int, (View) -> Unit> = mutableMapOf()
         val spanSizeMap: MutableMap<Int, Int> = mutableMapOf()
+        val getViewHolderMap: MutableMap<Int, (ViewGroup, Boolean) -> SimpleViewHolder> =
+            mutableMapOf()
 
         units.forEachIndexed { index, unit ->
             typesMap[unit.clazz] = index
-            layoutMap[index] = unit.layoutId
             unit.handler?.let { handlerMap[index] = it }
             bindingMap[index] = unit.binding
             unit.action?.let { actionMap[index] = it }
-            unit.createAction?.let { createActionMap[index] = it }
             spanSizeMap[index] = unit.spanSize
-            unit.createAction?.let { createActionMap[index] = it }
+            getViewHolderMap[index] = unit::getViewHolder
         }
 
-        return object : MultiTypedPagedDataBindingAdapter<Any>(
-            typesMap, layoutMap, handlerMap, buildCompare()
-        ) {
+        return object :
+            MultiTypedPagedDataBindingAdapter<Any>(typesMap, handlerMap, buildCompare()) {
 
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SimpleViewHolder {
-                val simpleViewHolder = if (bindingMap[viewType] == true) {
-                    super.onCreateViewHolder(parent, viewType)
-                } else {
-                    SimpleViewHolder(
-                        LayoutInflater.from(parent.context).inflate(
-                            layoutMap[viewType]!!,
-                            parent,
-                            false
-                        )
-                    )
-                }
-                createActionMap[viewType]?.let { it(simpleViewHolder.itemView) }
-                return simpleViewHolder
+                return getViewHolderMap[viewType]!!(parent, true)
             }
 
             override fun onBindViewHolder(holder: SimpleViewHolder, position: Int) {
@@ -152,50 +116,30 @@ class CompositeBuilder {
         extraItem: Any
     ): PagedWithExtraRow<Any> {
         val typesMap: MutableMap<Class<*>, Int> = mutableMapOf()
-        val layoutMap: MutableMap<Int, Int> = mutableMapOf()
         val handlerMap: MutableMap<Int, Any> = mutableMapOf()
         val bindingMap: MutableMap<Int, Boolean> = mutableMapOf()
         val actionMap: MutableMap<Int, (View, Any) -> Unit> = mutableMapOf()
-        val createActionMap: MutableMap<Int, (View) -> Unit> = mutableMapOf()
         val spanSizeMap: MutableMap<Int, Int> = mutableMapOf()
+        val getViewHolderMap: MutableMap<Int, (ViewGroup, Boolean) -> SimpleViewHolder> =
+            mutableMapOf()
 
         units.forEachIndexed { index, unit ->
             typesMap[unit.clazz] = index
-            layoutMap[index] = unit.layoutId
             unit.handler?.let { handlerMap[index] = it }
             bindingMap[index] = unit.binding
             unit.action?.let { actionMap[index] = it }
-            unit.createAction?.let { createActionMap[index] = it }
             spanSizeMap[index] = unit.spanSize
-            unit.createAction?.let { createActionMap[index] = it }
+            getViewHolderMap[index] = unit::getViewHolder
         }
 
-        return object : PagedWithExtraRow<Any>(
-            typesMap, layoutMap, handlerMap, buildCompare(), extraCU, extraItem
-        ) {
+        return object :
+            PagedWithExtraRow<Any>(typesMap, handlerMap, buildCompare(), extraCU, extraItem) {
 
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SimpleViewHolder {
                 return if (viewType == EXTRA_ROW_TYPE) {
-                    val binding: ViewDataBinding = DataBindingUtil.inflate(
-                        LayoutInflater.from(parent.context), extraCU.layoutId, parent, false
-                    )
-                    SimpleDataBindingViewHolder(
-                        binding
-                    )
+                    extraCU.getViewHolder(parent, true)
                 } else {
-                    val simpleViewHolder = if (bindingMap[viewType] == true) {
-                        super.onCreateViewHolder(parent, viewType)
-                    } else {
-                        SimpleViewHolder(
-                            LayoutInflater.from(parent.context).inflate(
-                                layoutMap[viewType]!!,
-                                parent,
-                                false
-                            )
-                        )
-                    }
-                    createActionMap[viewType]?.let { it(simpleViewHolder.itemView) }
-                    simpleViewHolder
+                    getViewHolderMap[viewType]!!(parent, true)
                 }
             }
 
