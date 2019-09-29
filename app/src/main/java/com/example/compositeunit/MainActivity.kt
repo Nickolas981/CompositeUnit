@@ -30,7 +30,6 @@ class MainActivity : AppCompatActivity() {
 
     fun initRecyclerView() {
         recyclerView.layoutManager = LinearLayoutManager(this)
-
         val extraCU = object : ViewCompositeUnit {
             override fun getView(parent: ViewGroup): View {
                 return View(parent.context).also {
