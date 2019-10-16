@@ -10,6 +10,7 @@ import com.example.compositeunit2.base.SimpleCompositeUnit
 import kotlinx.android.synthetic.main.activity_main.*
 import androidx.paging.PagedList
 import android.os.Looper
+import java.lang.ref.WeakReference
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
@@ -25,16 +26,23 @@ class MainActivity : AppCompatActivity() {
     fun initRecyclerView() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         val adapter = CompositeBuilder().add(
-            SimpleCompositeUnit(
+            object : SimpleCompositeUnit(
                 Number::class.java,
                 R.layout.item_number
-            )
+            ) {
+                override val preloadedViewHoldersSize: Int
+                    get() = 20
+            }
         )
             .buildPaged(
                 SimpleCompositeUnit(
                     NumberRed::class.java,
                     R.layout.item_number_red
-                ), NumberRed(""))
+                ),
+                NumberRed(""),
+                this,
+                WeakReference(recyclerView)
+            )
         recyclerView.adapter = adapter
 
         val config = PagedList.Config.Builder()
@@ -51,12 +59,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     class DataSourse() : PageKeyedDataSource<Int, Any>() {
-        override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Any>) {
+        override fun loadInitial(
+            params: LoadInitialParams<Int>,
+            callback: LoadInitialCallback<Int, Any>
+        ) {
             callback.onResult(List(params.requestedLoadSize) { Number(it.toString()) }, null, 1)
         }
 
         override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Any>) {
-            callback.onResult(List(params.requestedLoadSize) { Number(it.toString()) }, if (params.key < 5) params.key + 1 else null)
+            callback.onResult(
+                List(params.requestedLoadSize) { Number(it.toString()) },
+                if (params.key < 5) params.key + 1 else null
+            )
         }
 
         override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, Any>) {
