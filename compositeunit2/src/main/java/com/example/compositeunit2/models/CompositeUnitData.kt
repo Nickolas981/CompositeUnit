@@ -1,6 +1,8 @@
 package com.example.compositeunit2.models
 
 import android.view.View
+import android.view.ViewGroup
+import com.example.compositeunit2.adapter.SimpleViewHolder
 import com.example.compositeunit2.base.CompositeUnit
 
 class CompositeUnitData(
@@ -11,7 +13,8 @@ class CompositeUnitData(
     val actionMap: MutableMap<Int, (View, Any) -> Unit>,
     val createActionMap: MutableMap<Int, (View) -> Unit>,
     val spanSizeMap: MutableMap<Int, Int>,
-    val preloadedViewHoldersSizeMap: MutableMap<Int, Int>
+    val preloadedViewHoldersSizeMap: MutableMap<Int, Int>,
+    val getViewHolderMap: MutableMap<Int, (ViewGroup, Boolean) -> SimpleViewHolder>
 ) {
     companion object {
         fun from(units: List<CompositeUnit>): CompositeUnitData {
@@ -23,6 +26,8 @@ class CompositeUnitData(
             val createActionMap: MutableMap<Int, (View) -> Unit> = mutableMapOf()
             val spanSizeMap: MutableMap<Int, Int> = mutableMapOf()
             val preloadedViewHoldersSizeMap: MutableMap<Int, Int> = mutableMapOf()
+            val getViewHolderMap: MutableMap<Int, (ViewGroup, Boolean) -> SimpleViewHolder> =
+                mutableMapOf()
 
             units.forEachIndexed { index, unit ->
                 typesMap[unit.clazz] = index
@@ -34,6 +39,7 @@ class CompositeUnitData(
                 spanSizeMap[index] = unit.spanSize
                 unit.createAction?.let { createActionMap[index] = it }
                 preloadedViewHoldersSizeMap[index] = unit.preloadedViewHoldersSize
+                getViewHolderMap[index] = unit::getViewHolder
             }
 
             return CompositeUnitData(
@@ -44,7 +50,8 @@ class CompositeUnitData(
                 actionMap,
                 createActionMap,
                 spanSizeMap,
-                preloadedViewHoldersSizeMap
+                preloadedViewHoldersSizeMap,
+                getViewHolderMap
             )
         }
     }
