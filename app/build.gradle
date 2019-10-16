@@ -26,9 +26,19 @@ android {
     dataBinding {
         enabled = true
     }
+
+    sourceSets {
+        main {
+            java {
+                srcDir "${buildDir.absolutePath}/generated/source/kaptKotlin/"
+            }
+        }
+    }
 }
 
 dependencies {
+    compileOnly project(path: ':annotation')
+    kapt project(':processor')
     implementation project(":compositeunit2")
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"

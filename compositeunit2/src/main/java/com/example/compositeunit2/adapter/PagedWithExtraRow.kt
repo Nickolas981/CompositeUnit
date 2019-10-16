@@ -5,14 +5,13 @@ import com.example.compositeunit2.base.CompositeUnit
 
 const val EXTRA_ROW_TYPE = -13
 
-open class PagedWithExtraRow<T : Any>(
+abstract class PagedWithExtraRow<T : Any>(
     types: Map<Class<*>, Int>, // Map for viewTypes
-    layoutIds: Map<Int, Int>, // Map for layoutIds
     handlers: Map<Int, Any> = mapOf(),
     compare: (T, T) -> Boolean,
     private val extraCU: CompositeUnit,
     private val extraItem: Any
-) : MultiTypedPagedDataBindingAdapter<T>(types, layoutIds, handlers, compare) {
+) : MultiTypedPagedDataBindingAdapter<T>(types, handlers, compare) {
 
     override fun getItemViewType(position: Int): Int {
         return if (position == itemCount - 1) {

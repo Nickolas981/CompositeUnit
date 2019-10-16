@@ -1,1 +1,1 @@
-include ':app', ':compositeunit2'
+include ':app', ':compositeunit2', ':annotation', ':processor'
