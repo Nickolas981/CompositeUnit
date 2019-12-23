@@ -9,11 +9,8 @@ import com.example.compositeunit2.adapter.MultiTypedDataBindingAdapter
 import com.example.compositeunit2.adapter.MultiTypedPagedDataBindingAdapter
 import com.example.compositeunit2.adapter.SimpleDataBindingViewHolder
 import com.example.compositeunit2.adapter.SimpleViewHolder
-import kotlin.random.Random
 
 interface CompositeUnit {
-    val id: Int
-        get() = layoutId + Random.nextInt()
     val clazz: Class<*>
     val layoutId: Int
     val compare: (Any, Any) -> Boolean
