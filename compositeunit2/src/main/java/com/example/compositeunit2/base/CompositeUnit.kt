@@ -22,6 +22,8 @@ interface CompositeUnit {
         get() = null
     val createAction: ((View) -> Unit)?
         get() = null
+    val recyclingAction: ((Int, Any, View) -> Unit)?
+        get() = null
     val binding: Boolean
         get() = true
     val spanSize: Int

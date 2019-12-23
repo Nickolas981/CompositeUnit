@@ -10,6 +10,7 @@ class CompositeUnitData(
     val handlerMap: MutableMap<Int, Any>,
     val bindingMap: MutableMap<Int, Boolean>,
     val actionMap: MutableMap<Int, (View, Any) -> Unit>,
+    val recyclingActionMap: MutableMap<Int, (Int, Any, View) -> Unit>,
     val spanSizeMap: MutableMap<Int, Int>,
     val getViewHolderMap: MutableMap<Int, (ViewGroup, Boolean) -> SimpleViewHolder>
 ) {
@@ -19,6 +20,7 @@ class CompositeUnitData(
             val handlerMap: MutableMap<Int, Any> = mutableMapOf()
             val bindingMap: MutableMap<Int, Boolean> = mutableMapOf()
             val actionMap: MutableMap<Int, (View, Any) -> Unit> = mutableMapOf()
+            val recyclingActionMap: MutableMap<Int, (Int, Any, View) -> Unit> = mutableMapOf()
             val spanSizeMap: MutableMap<Int, Int> = mutableMapOf()
             val getViewHolderMap: MutableMap<Int, (ViewGroup, Boolean) -> SimpleViewHolder> =
                 mutableMapOf()
@@ -30,6 +32,7 @@ class CompositeUnitData(
                 unit.action?.let { actionMap[index] = it }
                 spanSizeMap[index] = unit.spanSize
                 getViewHolderMap[index] = unit::getViewHolder
+                unit.recyclingAction?.let { recyclingActionMap[index] = it }
             }
 
             return CompositeUnitData(
@@ -37,6 +40,7 @@ class CompositeUnitData(
                 handlerMap,
                 bindingMap,
                 actionMap,
+                recyclingActionMap,
                 spanSizeMap,
                 getViewHolderMap
             )

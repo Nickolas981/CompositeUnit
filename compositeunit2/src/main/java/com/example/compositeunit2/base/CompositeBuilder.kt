@@ -48,6 +48,15 @@ class CompositeBuilder {
                 }
             }
 
+            override fun onViewRecycled(holder: SimpleViewHolder) {
+                val position = holder.adapterPosition
+                val viewType = getItemViewType(position)
+
+                cud.recyclingActionMap[viewType]?.invoke(position, items[position], holder.itemView)
+
+                super.onViewRecycled(holder)
+            }
+
             override fun getSpanSize(viewType: Int): Int {
                 return cud.spanSizeMap[viewType] ?: 1
             }
