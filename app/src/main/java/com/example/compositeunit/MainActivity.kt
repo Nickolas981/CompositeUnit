@@ -39,9 +39,7 @@ class MainActivity : AppCompatActivity() {
                     NumberRed::class.java,
                     R.layout.item_number_red
                 ),
-                NumberRed(""),
-                this,
-                WeakReference(recyclerView)
+                NumberRed("")
             )
         recyclerView.adapter = adapter
 
