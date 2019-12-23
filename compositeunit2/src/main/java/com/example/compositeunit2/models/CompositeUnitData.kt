@@ -25,7 +25,8 @@ class CompositeUnitData(
             val getViewHolderMap: MutableMap<Int, (ViewGroup, Boolean) -> SimpleViewHolder> =
                 mutableMapOf()
 
-            units.forEachIndexed { index, unit ->
+            units.forEach { unit ->
+                val index = unit.id
                 typesMap[unit.clazz] = index
                 unit.handler?.let { handlerMap[index] = it }
                 bindingMap[index] = unit.binding

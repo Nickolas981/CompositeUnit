@@ -12,6 +12,8 @@ import com.example.compositeunit2.adapter.SimpleDataBindingViewHolder
 import com.example.compositeunit2.adapter.SimpleViewHolder
 
 interface CompositeUnit {
+    val id: Int
+        get() = layoutId
     val clazz: Class<*>
     val layoutId: Int
     val compare: (Any, Any) -> Boolean
