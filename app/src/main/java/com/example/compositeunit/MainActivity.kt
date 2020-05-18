@@ -2,17 +2,12 @@ package com.example.compositeunit
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import androidx.paging.PageKeyedDataSource
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.compositeunit2.base.CompositeBuilder
 import com.example.compositeunit2.base.SimpleCompositeUnit
 import kotlinx.android.synthetic.main.activity_main.*
-import androidx.paging.PagedList
-import android.os.Looper
-import java.lang.ref.WeakReference
-import java.util.concurrent.Executor
-import java.util.concurrent.Executors
+import android.util.Log
+import com.example.compositeunit2.adapter.paged.PagedConfig
 
 
 class MainActivity : AppCompatActivity() {
@@ -33,57 +28,11 @@ class MainActivity : AppCompatActivity() {
                 override val preloadedViewHoldersSize: Int
                     get() = 20
             }
-        )
-            .buildPaged(
-                SimpleCompositeUnit(
-                    NumberRed::class.java,
-                    R.layout.item_number_red
-                ),
-                NumberRed("")
-            )
+        ).buildPagedAdapter(PagedConfig(10) { Log.d("MainActivity", "REACHED_BOTTOM")})
         recyclerView.adapter = adapter
 
-        val config = PagedList.Config.Builder()
-            .setEnablePlaceholders(false)
-            .setPageSize(10)
-            .build()
-
-        val pagedList = PagedList.Builder(DataSourse(), config)
-            .setNotifyExecutor(MainThreadExecutor())
-            .setFetchExecutor(Executors.newSingleThreadExecutor())
-            .build()
-
-        adapter.submitList(pagedList)
-    }
-
-    class DataSourse() : PageKeyedDataSource<Int, Any>() {
-        override fun loadInitial(
-            params: LoadInitialParams<Int>,
-            callback: LoadInitialCallback<Int, Any>
-        ) {
-            callback.onResult(List(params.requestedLoadSize) { Number(it.toString()) }, null, 1)
-        }
-
-        override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Any>) {
-            callback.onResult(
-                List(params.requestedLoadSize) { Number(it.toString()) },
-                if (params.key < 5) params.key + 1 else null
-            )
-        }
-
-        override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, Any>) {
-            callback.onResult(List(params.requestedLoadSize) { Number(it.toString()) }, 1)
-        }
+        adapter.items = List(100) { Number(it.toString()) }
     }
 
     class Number(val number: String)
-    class NumberRed(val number: String)
-
-    internal inner class MainThreadExecutor : Executor {
-        private val mHandler = Handler(Looper.getMainLooper())
-
-        override fun execute(command: Runnable) {
-            mHandler.post(command)
-        }
-    }
 }
