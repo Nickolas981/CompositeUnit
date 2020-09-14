@@ -13,6 +13,6 @@ fun <T, R> mapOf(list: Iterable<T>, block: (T) -> R): Map<T, R> {
 }
 
 @BindingAdapter("items")
-fun RecyclerView.setItems(items: List<Any>) {
-    (adapter as? MultiTypedDataBindingAdapter<Any>)?.items = items
+fun RecyclerView.setItems(items: List<Any>?) {
+    (adapter as? MultiTypedDataBindingAdapter<Any>)?.items = items ?: emptyList()
 }
